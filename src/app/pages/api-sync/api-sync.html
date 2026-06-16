@@ -1,0 +1,131 @@
+<section class="api-sync">
+  <h2 class="page-title">API Sync</h2>
+
+  <!-- ── Credentials form ── -->
+  @if (!stateService.isAuthenticated()) {
+    <div class="card credentials-card">
+      <h3 class="card-title">Connect to OE2</h3>
+      <p class="card-desc">Enter your in-game Client ID and character secret to connect.</p>
+
+      <form [formGroup]="form" (ngSubmit)="connect()" class="credentials-form" novalidate>
+        <div class="field">
+          <label for="clientId">Client ID</label>
+          <input
+            id="clientId"
+            type="text"
+            formControlName="clientId"
+            placeholder="Your OE2 account Client ID"
+            autocomplete="username"
+            [class.invalid]="form.controls.clientId.invalid && form.controls.clientId.touched"
+          />
+          @if (form.controls.clientId.invalid && form.controls.clientId.touched) {
+            <span class="field-error" role="alert">Client ID is required</span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="secret">Secret</label>
+          <input
+            id="secret"
+            type="password"
+            formControlName="secret"
+            placeholder="Per-character secret"
+            autocomplete="current-password"
+            [class.invalid]="form.controls.secret.invalid && form.controls.secret.touched"
+          />
+          @if (form.controls.secret.invalid && form.controls.secret.touched) {
+            <span class="field-error" role="alert">Secret is required</span>
+          }
+        </div>
+
+        @if (connectError()) {
+          <p class="error-msg" role="alert">{{ connectError() }}</p>
+        }
+
+        <button type="submit" class="btn btn-primary" [disabled]="isConnecting()">
+          {{ isConnecting() ? 'Connecting…' : 'Connect' }}
+        </button>
+      </form>
+    </div>
+  }
+
+  <!-- ── Connection status ── -->
+  @if (stateService.isAuthenticated()) {
+    <div class="card status-card">
+      <div class="status-header">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span class="status-label">Connected as <strong>{{ stateService.characterName() }}</strong></span>
+        <button class="btn btn-ghost btn-sm" (click)="disconnect()">Disconnect</button>
+      </div>
+
+      @if (stateService.scopes().length) {
+        <details class="scopes-details">
+          <summary>{{ stateService.scopes().length }} scopes granted</summary>
+          <ul class="scopes-list">
+            @for (scope of stateService.scopes(); track scope) {
+              <li>{{ scope }}</li>
+            }
+          </ul>
+        </details>
+      }
+
+      @if (lastSynced()) {
+        <p class="last-synced">Last synced: {{ lastSynced() }}</p>
+      }
+    </div>
+
+    <!-- ── Sync controls ── -->
+    <div class="card sync-card">
+      <h3 class="card-title">Sync Data</h3>
+
+      <div class="sync-actions">
+        <div class="sync-action">
+          <button
+            class="btn btn-secondary"
+            (click)="syncColonies()"
+            [disabled]="isSyncing()"
+            aria-label="Sync colonies data"
+          >
+            Sync Colonies
+          </button>
+          <span class="sync-desc">Buildings, warehouse &amp; workers for each colony</span>
+        </div>
+
+        <div class="sync-action">
+          <button
+            class="btn btn-secondary"
+            (click)="syncAssets()"
+            [disabled]="isSyncing()"
+            aria-label="Sync assets data"
+          >
+            Sync Assets
+          </button>
+          <span class="sync-desc">Blueprints, surveys, resources &amp; crates across all locations</span>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      @if (syncProgress()) {
+        <div class="progress-block" role="status" aria-live="polite">
+          <p class="progress-phase">{{ syncProgress()!.phase }}</p>
+          @if (syncProgress()!.total > 0) {
+            <div class="progress-bar-track" role="progressbar"
+              [attr.aria-valuenow]="syncProgress()!.done"
+              [attr.aria-valuemin]="0"
+              [attr.aria-valuemax]="syncProgress()!.total"
+            >
+              <div
+                class="progress-bar-fill"
+                [style.width.%]="(syncProgress()!.done / syncProgress()!.total) * 100"
+              ></div>
+            </div>
+            <span class="progress-count">{{ syncProgress()!.done }} / {{ syncProgress()!.total }}</span>
+          }
+          @if (syncProgress()!.error) {
+            <p class="error-msg" role="alert">{{ syncProgress()!.error }}</p>
+          }
+        </div>
+      }
+    </div>
+  }
+</section>

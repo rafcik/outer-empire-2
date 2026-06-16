@@ -1,0 +1,262 @@
+.api-sync {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #e0e4f0;
+  margin: 0;
+}
+
+.card {
+  background: #1a1a2e;
+  border: 1px solid #2a2a4a;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #e0e4f0;
+  margin: 0 0 0.5rem;
+}
+
+.card-desc {
+  color: #8a90b0;
+  font-size: 0.9rem;
+  margin: 0 0 1.25rem;
+}
+
+// ── Credentials form ─────────────────────────────────────────────────────────
+
+.credentials-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #c0c4d8;
+  }
+
+  input {
+    background: #0f0f1a;
+    border: 1px solid #2a2a4a;
+    border-radius: 6px;
+    color: #e0e4f0;
+    font-size: 0.95rem;
+    padding: 0.625rem 0.875rem;
+    transition: border-color 0.15s;
+
+    &::placeholder {
+      color: #4a4a6a;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: #7c8cff;
+    }
+
+    &.invalid {
+      border-color: #ff6b6b;
+    }
+  }
+}
+
+.field-error {
+  font-size: 0.8rem;
+  color: #ff6b6b;
+}
+
+.error-msg {
+  font-size: 0.875rem;
+  color: #ff6b6b;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 4px;
+  border-left: 3px solid #ff6b6b;
+}
+
+// ── Buttons ───────────────────────────────────────────────────────────────────
+
+.btn {
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.625rem 1.25rem;
+  transition: background 0.15s, opacity 0.15s;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.btn-primary {
+  background: #7c8cff;
+  color: #0f0f1a;
+  align-self: flex-start;
+
+  &:not(:disabled):hover {
+    background: #9aaafe;
+  }
+}
+
+.btn-secondary {
+  background: #2a2a4a;
+  color: #e0e4f0;
+  border: 1px solid #3a3a6a;
+
+  &:not(:disabled):hover {
+    background: #3a3a5a;
+  }
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #8a90b0;
+  border: 1px solid #2a2a4a;
+
+  &:not(:disabled):hover {
+    color: #e0e4f0;
+    border-color: #3a3a6a;
+  }
+}
+
+.btn-sm {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.75rem;
+}
+
+// ── Status card ───────────────────────────────────────────────────────────────
+
+.status-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #4caf88;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(76, 175, 136, 0.6);
+}
+
+.status-label {
+  flex: 1;
+  font-size: 0.95rem;
+  color: #c0c4d8;
+
+  strong {
+    color: #e0e4f0;
+  }
+}
+
+.scopes-details {
+  margin-top: 0.5rem;
+
+  summary {
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #7c8cff;
+    user-select: none;
+
+    &:hover {
+      color: #9aaafe;
+    }
+  }
+}
+
+.scopes-list {
+  margin: 0.5rem 0 0;
+  padding: 0 0 0 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+
+  li {
+    font-size: 0.8rem;
+    color: #8a90b0;
+    font-family: monospace;
+  }
+}
+
+.last-synced {
+  margin: 0.75rem 0 0;
+  font-size: 0.8rem;
+  color: #6a708a;
+}
+
+// ── Sync card ─────────────────────────────────────────────────────────────────
+
+.sync-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sync-action {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sync-desc {
+  font-size: 0.85rem;
+  color: #6a708a;
+}
+
+// ── Progress ──────────────────────────────────────────────────────────────────
+
+.progress-block {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progress-phase {
+  font-size: 0.9rem;
+  color: #c0c4d8;
+  margin: 0;
+}
+
+.progress-bar-track {
+  background: #0f0f1a;
+  border-radius: 4px;
+  height: 6px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.progress-bar-fill {
+  background: #7c8cff;
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-count {
+  font-size: 0.8rem;
+  color: #6a708a;
+}

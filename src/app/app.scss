@@ -1,0 +1,47 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.tab-bar {
+  display: flex;
+  background: #1a1a2e;
+  border-bottom: 2px solid #16213e;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.tab {
+  padding: 0.875rem 1.5rem;
+  color: #a0a8c0;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s, border-color 0.15s;
+
+  &:hover {
+    color: #e0e4f0;
+  }
+
+  &.active {
+    color: #7c8cff;
+    border-bottom-color: #7c8cff;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #7c8cff;
+    outline-offset: -2px;
+  }
+}
+
+.page-content {
+  flex: 1;
+  padding: 2rem;
+  background: #0f0f1a;
+  color: #e0e4f0;
+}
