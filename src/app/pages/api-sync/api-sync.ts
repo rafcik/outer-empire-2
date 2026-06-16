@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, ViewChild, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { StateService } from '../../services/state.service';
@@ -10,7 +10,7 @@ import { AuthState, SyncProgress } from '../../models/api.models';
   templateUrl: './api-sync.html',
   styleUrl: './api-sync.scss',
 })
-export class ApiSyncComponent {
+export class ApiSyncComponent implements AfterViewChecked {
   readonly stateService = inject(StateService);
   private readonly api = inject(ApiService);
   private readonly fb = inject(FormBuilder);
@@ -19,6 +19,11 @@ export class ApiSyncComponent {
   readonly connectError = signal<string | null>(null);
   readonly isSyncing = signal(false);
   readonly syncProgress = signal<SyncProgress | null>(null);
+  readonly logs = signal<string>('');
+
+  private shouldScrollLogs = false;
+
+  @ViewChild('logBox') private logBox?: ElementRef<HTMLPreElement>;
 
   readonly lastSynced = computed(() => {
     const ts = this.stateService.syncedData().lastSynced;
@@ -30,6 +35,14 @@ export class ApiSyncComponent {
     clientId: [this.stateService.auth()?.clientId ?? '', Validators.required],
     secret: [this.stateService.auth()?.secret ?? '', Validators.required],
   });
+
+  ngAfterViewChecked(): void {
+    if (this.shouldScrollLogs && this.logBox) {
+      const el = this.logBox.nativeElement;
+      el.scrollTop = el.scrollHeight;
+      this.shouldScrollLogs = false;
+    }
+  }
 
   connect(): void {
     if (this.form.invalid) {
@@ -68,13 +81,16 @@ export class ApiSyncComponent {
     this.form.reset({ clientId: '', secret: '' });
   }
 
+  clearLogs(): void {
+    this.logs.set('');
+  }
+
   syncColonies(): void {
     if (this.isSyncing()) return;
-    this.isSyncing.set(true);
-    this.syncProgress.set({ phase: 'Starting…', done: 0, total: 0 });
+    this.startSync('colonies');
 
     this.api.syncColonies().subscribe({
-      next: (p) => this.syncProgress.set(p),
+      next: (p) => this.handleProgress(p),
       complete: () => this.isSyncing.set(false),
       error: () => this.isSyncing.set(false),
     });
@@ -82,13 +98,39 @@ export class ApiSyncComponent {
 
   syncAssets(): void {
     if (this.isSyncing()) return;
-    this.isSyncing.set(true);
-    this.syncProgress.set({ phase: 'Starting…', done: 0, total: 0 });
+    this.startSync('assets');
 
     this.api.syncAssets().subscribe({
-      next: (p) => this.syncProgress.set(p),
+      next: (p) => this.handleProgress(p),
       complete: () => this.isSyncing.set(false),
       error: () => this.isSyncing.set(false),
     });
   }
+
+  private startSync(type: string): void {
+    this.isSyncing.set(true);
+    this.syncProgress.set({ phase: 'Starting…', done: 0, total: 0 });
+    this.appendLog(`[${timestamp()}] Starting ${type} sync…`);
+  }
+
+  private handleProgress(p: SyncProgress): void {
+    this.syncProgress.set(p);
+    if (p.log) {
+      this.appendLog(p.log.startsWith('\n')
+        ? `\n[${timestamp()}]${p.log.slice(1)}`
+        : `[${timestamp()}] ${p.log}`);
+    }
+    if (p.error) {
+      this.appendLog(`[${timestamp()}] ERROR: ${p.error}`);
+    }
+  }
+
+  private appendLog(line: string): void {
+    this.logs.update((prev) => prev ? `${prev}\n${line}` : line);
+    this.shouldScrollLogs = true;
+  }
+}
+
+function timestamp(): string {
+  return new Date().toLocaleTimeString();
 }

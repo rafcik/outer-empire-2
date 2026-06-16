@@ -418,4 +418,5 @@ export interface SyncProgress {
   done: number;
   total: number;
   error?: string;
+  log?: string;
 }

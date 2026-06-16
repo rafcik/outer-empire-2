@@ -104,12 +104,14 @@
         </div>
       </div>
 
-      <!-- Progress -->
+      <!-- Progress bar -->
       @if (syncProgress()) {
         <div class="progress-block" role="status" aria-live="polite">
           <p class="progress-phase">{{ syncProgress()!.phase }}</p>
           @if (syncProgress()!.total > 0) {
-            <div class="progress-bar-track" role="progressbar"
+            <div
+              class="progress-bar-track"
+              role="progressbar"
               [attr.aria-valuenow]="syncProgress()!.done"
               [attr.aria-valuemin]="0"
               [attr.aria-valuemax]="syncProgress()!.total"
@@ -127,5 +129,18 @@
         </div>
       }
     </div>
+
+    <!-- ── Sync log ── -->
+    @if (logs()) {
+      <div class="card log-card">
+        <div class="log-header">
+          <span class="card-title">Sync Log</span>
+          <button class="btn btn-ghost btn-sm" (click)="clearLogs()" [disabled]="isSyncing()">
+            Clear
+          </button>
+        </div>
+        <pre #logBox class="log-box" aria-label="Sync log" aria-live="polite">{{ logs() }}</pre>
+      </div>
+    }
   }
 </section>
