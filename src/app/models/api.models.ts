@@ -420,3 +420,19 @@ export interface SyncProgress {
   error?: string;
   log?: string;
 }
+
+// ── Production plan ───────────────────────────────────────────────────────────
+
+export interface ProductionQueueItem {
+  blueprintId: number;
+  quantity: number;
+}
+
+export interface ProductionPlanet {
+  colonyId: number;
+  queue: ProductionQueueItem[];
+}
+
+export interface ProductionPlan {
+  planets: ProductionPlanet[];
+}
